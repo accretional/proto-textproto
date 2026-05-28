@@ -1,0 +1,6 @@
+inner: {
+  name: "with colon"
+}
+outer: <
+  value: 42
+>

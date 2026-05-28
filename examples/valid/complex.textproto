@@ -1,0 +1,27 @@
+name: "complex example"
+id: 12345
+metadata {
+  created_at: "2024-01-15"
+  tags: ["production", "v2"]
+  priority: 1
+}
+items: [
+  {
+    label: "item_one"
+    value: 100
+    nested {
+      enabled: true
+      ratio: 0.75
+    }
+  },
+  {
+    label: "item_two"
+    value: -200
+    nested <
+      enabled: false
+      ratio: 1e-5
+    >
+  }
+]
+[com.example.custom]: "extension data"
+debug: false

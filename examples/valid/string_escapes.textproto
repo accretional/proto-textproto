@@ -1,0 +1,10 @@
+basic: "hello world"
+single_quoted: 'single quoted'
+tab_escape: "hello\tworld"
+newline_escape: "line1\nline2"
+backslash: "path\\to\\file"
+quote_escape: "she said \"hi\""
+octal: "\101\102\103"
+hex: "\x41\x42"
+unicode_short: "\u0041\u0042"
+unicode_long: "\U00000041"

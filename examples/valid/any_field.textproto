@@ -1,0 +1,4 @@
+[type.googleapis.com/com.example.MyType] {
+  name: "any value"
+  count: 10
+}

@@ -1,0 +1,10 @@
+decimal: 42
+negative: -17
+octal: 0755
+hex: 0xFF
+float_dot: 3.14
+float_exp: 1e10
+float_neg_exp: -2.5E-3
+float_suffix: 10f
+float_dot_only: .5
+zero: 0

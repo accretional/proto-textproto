@@ -1,0 +1,5 @@
+float_inf: inf
+float_neg_inf: -inf
+float_nan: nan
+bool_true: true
+bool_false: false
