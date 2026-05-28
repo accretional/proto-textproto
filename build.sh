@@ -10,7 +10,7 @@ bash setup.sh
 if [ ! -f proto/textproto.proto ]; then
   echo "ERROR: proto/textproto.proto not found."
   echo "Run the ebnf2proto tool first to generate proto files:"
-  echo "  go run ./cmd/ebnf2proto textproto.ebnf proto/textproto.proto"
+  echo "  go run ./cmd/ebnf2proto proto/textproto.proto"
   exit 1
 fi
 

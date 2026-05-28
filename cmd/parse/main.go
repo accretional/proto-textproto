@@ -5,27 +5,21 @@ import (
 	"os"
 	"strings"
 
+	"github.com/accretional/proto-textproto/lang"
 	pb "github.com/accretional/gluon/v2/pb"
 
 	"github.com/accretional/gluon/v2/metaparser"
 )
 
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Fprintf(os.Stderr, "usage: parse <grammar.ebnf> <input.textproto>\n")
+	if len(os.Args) < 2 {
+		fmt.Fprintf(os.Stderr, "usage: parse <input.textproto> [-v]\n")
 		os.Exit(1)
 	}
-	ebnfPath := os.Args[1]
-	inputPath := os.Args[2]
+	inputPath := os.Args[1]
 
-	// Load grammar
-	ebnfSrc, err := os.ReadFile(ebnfPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "read grammar %s: %v\n", ebnfPath, err)
-		os.Exit(1)
-	}
-
-	grammarDoc := metaparser.WrapString(string(ebnfSrc))
+	// Use embedded grammar
+	grammarDoc := metaparser.WrapString(string(lang.EBNF))
 	gd, err := metaparser.ParseEBNF(grammarDoc)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ParseEBNF: %v\n", err)
@@ -55,7 +49,7 @@ func main() {
 	}
 
 	fmt.Printf("PASS: %s\n", inputPath)
-	if len(os.Args) > 3 && os.Args[3] == "-v" {
+	if len(os.Args) > 2 && os.Args[2] == "-v" {
 		printAST(ast.GetRoot(), 0)
 	}
 }

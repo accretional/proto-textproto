@@ -14,7 +14,7 @@ echo ""
 echo "--- Valid textproto files (should PASS) ---"
 for textproto in examples/valid/*.textproto; do
   base=$(basename "$textproto" .textproto)
-  if ./bin/parse textproto.ebnf "$textproto" 2>/dev/null; then
+  if ./bin/parse "$textproto" 2>/dev/null; then
     echo "PASS: $base"
     PASS=$((PASS + 1))
   else
@@ -28,7 +28,7 @@ echo ""
 echo "--- Invalid textproto files (should FAIL) ---"
 for textproto in examples/invalid/*.textproto; do
   base=$(basename "$textproto" .textproto)
-  if ./bin/parse textproto.ebnf "$textproto" 2>/dev/null; then
+  if ./bin/parse "$textproto" 2>/dev/null; then
     echo "FAIL: $base (expected rejection but got PASS)"
     FAIL=$((FAIL + 1))
     ERRORS="${ERRORS}\n  ${base}: expected invalid, got accepted"
