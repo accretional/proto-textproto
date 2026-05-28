@@ -9,8 +9,7 @@ bash setup.sh
 # Check that proto files exist (they should be pre-generated, not regenerated)
 if [ ! -f proto/textproto.proto ]; then
   echo "ERROR: proto/textproto.proto not found."
-  echo "Run the ebnf2proto tool first to generate proto files:"
-  echo "  go run ./cmd/ebnf2proto proto/textproto.proto"
+  echo "Generate proto files first using lang/metaparser."
   exit 1
 fi
 
@@ -22,8 +21,6 @@ fi
 
 # Build binaries
 mkdir -p bin
-echo "Building cmd/ebnf2proto..."
-go build -o bin/ebnf2proto ./cmd/ebnf2proto
 
 echo "Building cmd/parse..."
 go build -o bin/parse ./cmd/parse
