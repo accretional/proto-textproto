@@ -1,0 +1,418 @@
+# Flame graph — CPU Profile (interactive: click to zoom, hover for details)
+# Canvas 1200×400, row height=52 (50px bar + 2px gap)
+# Levels (y = top of rect, h=50):
+#   level 4 (top):   y=16
+#   level 3:         y=70
+#   level 2:         y=124
+#   level 1:         y=178
+#   level 0 (root):  y=232
+# Colors: warm gradient from root (dark red) up to tip (yellow)
+
+root: {
+  attrs: {
+    width:  { base_val: { value_as_string: "1200" } }
+    height: { base_val: { value_as_string: "400"  } }
+    svg_graphics_element: {
+      svg_element: {
+        style: "font-family:monospace;background:#1a1a2e"
+        global_event_handlers: { onload: "init(evt)" }
+      }
+    }
+  }
+
+  # ── Style ──────────────────────────────────────────────────────────────────
+  children: {
+    style_elem: {
+      text_content: ".func_g:hover rect { stroke:#fff; stroke-width:1.5; } .func_g { cursor:pointer; } #unzoom { cursor:pointer; display:none; } #unzoom:hover { opacity:1 !important; }"
+    }
+  }
+
+  # ── Script ─────────────────────────────────────────────────────────────────
+  children: {
+    script: {
+      text_content: "var svg, details;\nfunction init(evt) {\n  svg = document.getElementsByTagName('svg')[0];\n  details = document.getElementById('details');\n}\nfunction s(node) {\n  var t = node.querySelector('title');\n  if (t) details.textContent = t.textContent;\n}\nfunction c() {\n  details.textContent = 'click a frame to zoom';\n}\nfunction origSave(e, attr) {\n  if (!e.hasAttribute('_o_'+attr)) e.setAttribute('_o_'+attr, e.getAttribute(attr));\n}\nfunction origLoad(e, attr) {\n  if (e.hasAttribute('_o_'+attr)) {\n    e.setAttribute(attr, e.getAttribute('_o_'+attr));\n    e.removeAttribute('_o_'+attr);\n  }\n}\nfunction doUnzoom() {\n  var gs = document.querySelectorAll('.func_g');\n  gs.forEach(function(g) {\n    g.style.display='block'; g.style.opacity='1';\n    var gr=g.querySelector('rect'); var gt=g.querySelector('text');\n    origLoad(gr,'x'); origLoad(gr,'width');\n    if(gt) origLoad(gt,'x');\n  });\n}\nfunction zoom(node) {\n  doUnzoom();\n  var r = node.querySelector('rect');\n  var xmin = parseFloat(r.getAttribute('x'));\n  var w    = parseFloat(r.getAttribute('width'));\n  var ymin = parseFloat(r.getAttribute('y'));\n  var svgW = parseFloat(svg.getAttribute('width'));\n  if (w >= svgW - 1) { document.getElementById('unzoom').style.display='none'; return; }\n  var ratio = svgW / w;\n  document.getElementById('unzoom').style.display = 'block';\n  var gs = document.querySelectorAll('.func_g');\n  gs.forEach(function(g) {\n    var gr = g.querySelector('rect');\n    var gt = g.querySelector('text');\n    var gx = parseFloat(gr.getAttribute('x'));\n    var gw = parseFloat(gr.getAttribute('width'));\n    var gy = parseFloat(gr.getAttribute('y'));\n    var isAncestor = gy > ymin;\n    if (isAncestor) {\n      if (gx <= xmin && gx+gw >= xmin+w-0.001) {\n        origSave(gr,'x'); origSave(gr,'width');\n        gr.setAttribute('x','0'); gr.setAttribute('width', svgW);\n        if(gt){origSave(gt,'x'); gt.setAttribute('x', svgW/2);}\n        g.style.opacity='0.5';\n      } else {\n        g.style.display='none';\n      }\n    } else {\n      if (gx < xmin-0.001 || gx+gw > xmin+w+0.001) {\n        g.style.display='none';\n      } else {\n        origSave(gr,'x'); origSave(gr,'width');\n        var nx=(gx-xmin)*ratio; var nw=gw*ratio;\n        gr.setAttribute('x',nx); gr.setAttribute('width',nw);\n        if(gt){origSave(gt,'x'); gt.setAttribute('x', nx+nw/2);}\n        g.style.opacity='1';\n      }\n    }\n  });\n}\nfunction unzoom() {\n  document.getElementById('unzoom').style.display='none';\n  doUnzoom();\n  details.textContent='click a frame to zoom';\n}"
+    }
+  }
+
+  # ── Title / chrome ─────────────────────────────────────────────────────────
+  children: {
+    text_elem: {
+      attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "600" } } }
+        y: { base_val: { items: { value_as_string: "396" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#aaa;font-family:sans-serif"
+        } } }
+      } }
+      runs: { text: "CPU Flame Graph — click a frame to zoom" }
+    }
+  }
+
+  children: {
+    text_elem: {
+      attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "10" } } }
+        y: { base_val: { items: { value_as_string: "12" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          id: "unzoom"
+          style: "font-size:12px;fill:#ccc;font-family:sans-serif;opacity:0.6"
+          global_event_handlers: { onclick: "unzoom()" }
+        } } }
+      } }
+      runs: { text: "← Unzoom" }
+    }
+  }
+
+  children: {
+    text_elem: {
+      attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "600" } } }
+        y: { base_val: { items: { value_as_string: "12" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          id: "details"
+          style: "font-size:12px;text-anchor:middle;fill:#ccc;font-family:sans-serif"
+        } } }
+      } }
+      runs: { text: "click a frame to zoom" }
+    }
+  }
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Level 0 — root frame (y=232, h=50)   color: #c0392b
+  # ════════════════════════════════════════════════════════════════════════════
+  children: {
+    g: {
+      attrs: {
+        svg_graphics_element: {
+          svg_element: {
+            class_name: { base_val: "func_g" }
+            global_event_handlers: {
+              onclick: "zoom(this)"
+              onmouseover: "s(this)"
+              onmouseout: "c()"
+            }
+          }
+        }
+      }
+      children: { title: { text_content: "main (100%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "0"    } }
+        y:      { base_val: { value_as_string: "232"  } }
+        width:  { base_val: { value_as_string: "1200" } }
+        height: { base_val: { value_as_string: "50"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#c0392b;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "600" } } }
+        y: { base_val: { items: { value_as_string: "262" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "main (100%)" } } }
+    }
+  }
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Level 1  (y=178, h=50)   color: #d35400
+  # processRequest [0, 720]  gc [722, 300]  idle [1024, 176]
+  # ════════════════════════════════════════════════════════════════════════════
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "processRequest (60%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "0"   } }
+        y:      { base_val: { value_as_string: "178" } }
+        width:  { base_val: { value_as_string: "718" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#d35400;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "359" } } }
+        y: { base_val: { items: { value_as_string: "208" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "processRequest (60%)" } } }
+    }
+  }
+
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "gc (25%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "720" } }
+        y:      { base_val: { value_as_string: "178" } }
+        width:  { base_val: { value_as_string: "298" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#d35400;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "869" } } }
+        y: { base_val: { items: { value_as_string: "208" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "gc (25%)" } } }
+    }
+  }
+
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "idle (15%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "1020" } }
+        y:      { base_val: { value_as_string: "178"  } }
+        width:  { base_val: { value_as_string: "178"  } }
+        height: { base_val: { value_as_string: "50"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#d35400;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "1109" } } }
+        y: { base_val: { items: { value_as_string: "208"  } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "idle (15%)" } } }
+    }
+  }
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Level 2  (y=124, h=50)   color: #e67e22
+  # readDB [0, 418]  renderHTML [420, 298]  freeHeap [720, 298]
+  # ════════════════════════════════════════════════════════════════════════════
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "readDB (35%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "0"   } }
+        y:      { base_val: { value_as_string: "124" } }
+        width:  { base_val: { value_as_string: "418" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#e67e22;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "209" } } }
+        y: { base_val: { items: { value_as_string: "154" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "readDB (35%)" } } }
+    }
+  }
+
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "renderHTML (25%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "420" } }
+        y:      { base_val: { value_as_string: "124" } }
+        width:  { base_val: { value_as_string: "298" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#e67e22;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "569" } } }
+        y: { base_val: { items: { value_as_string: "154" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "renderHTML (25%)" } } }
+    }
+  }
+
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "freeHeap (25%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "720" } }
+        y:      { base_val: { value_as_string: "124" } }
+        width:  { base_val: { value_as_string: "298" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#e67e22;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "869" } } }
+        y: { base_val: { items: { value_as_string: "154" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "freeHeap (25%)" } } }
+    }
+  }
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Level 3  (y=70, h=50)   color: #f39c12
+  # sqlQuery [0, 266]  marshal [268, 148]  buildDOM [420, 298]
+  # ════════════════════════════════════════════════════════════════════════════
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "sqlQuery (22%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "0"   } }
+        y:      { base_val: { value_as_string: "70"  } }
+        width:  { base_val: { value_as_string: "266" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#f39c12;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "133" } } }
+        y: { base_val: { items: { value_as_string: "100" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "sqlQuery (22%)" } } }
+    }
+  }
+
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "marshal (13%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "268" } }
+        y:      { base_val: { value_as_string: "70"  } }
+        width:  { base_val: { value_as_string: "148" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#f39c12;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "342" } } }
+        y: { base_val: { items: { value_as_string: "100" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "marshal (13%)" } } }
+    }
+  }
+
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "buildDOM (25%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "420" } }
+        y:      { base_val: { value_as_string: "70"  } }
+        width:  { base_val: { value_as_string: "298" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#f39c12;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "569" } } }
+        y: { base_val: { items: { value_as_string: "100" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:13px;text-anchor:middle;fill:#fff;pointer-events:none"
+        } } }
+      } } runs: { text: "buildDOM (25%)" } } }
+    }
+  }
+
+  # ════════════════════════════════════════════════════════════════════════════
+  # Level 4 — tips  (y=16, h=50)   color: #f1c40f
+  # indexScan [0, 208]  rowDecode [210, 56]
+  # ════════════════════════════════════════════════════════════════════════════
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "indexScan (17%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "0"   } }
+        y:      { base_val: { value_as_string: "16"  } }
+        width:  { base_val: { value_as_string: "208" } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#f1c40f;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "104" } } }
+        y: { base_val: { items: { value_as_string: "46"  } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:12px;text-anchor:middle;fill:#333;pointer-events:none"
+        } } }
+      } } runs: { text: "indexScan (17%)" } } }
+    }
+  }
+
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "func_g" }
+        global_event_handlers: { onclick: "zoom(this)" onmouseover: "s(this)" onmouseout: "c()" }
+      } } }
+      children: { title: { text_content: "rowDecode (5%)" } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "210" } }
+        y:      { base_val: { value_as_string: "16"  } }
+        width:  { base_val: { value_as_string: "56"  } }
+        height: { base_val: { value_as_string: "50"  } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#f1c40f;stroke:#1a1a2e;stroke-width:0.5"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "238" } } }
+        y: { base_val: { items: { value_as_string: "46"  } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:11px;text-anchor:middle;fill:#333;pointer-events:none"
+        } } }
+      } } runs: { text: "rD" } } }
+    }
+  }
+}

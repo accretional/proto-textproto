@@ -1,0 +1,16 @@
+title: "Properties"
+property: { type_name: "BackgroundColorExpr" }
+property: { type_name: "ColorExpr" demo_type: TEXT context: "background: darkslategray;" }
+property: { type_name: "BackgroundImageExpr" }
+property: { type_name: "OpacityExpr" context: "background: cornflowerblue;" }
+property: { type_name: "FontSizeExpr" demo_type: TEXT context: "background: darkslateblue; color: white;" }
+property: { type_name: "FontWeightExpr" demo_type: TEXT context: "background: darkslateblue; color: white;" }
+property: { type_name: "TextDecorationExpr" demo_type: TEXT context: "background: darkslateblue; color: white;" }
+property: { type_name: "TextTransformExpr" demo_type: TEXT context: "background: darkslateblue; color: white;" }
+property: { type_name: "BorderRadiusExpr" context: "background: cornflowerblue;" }
+property: { type_name: "BoxShadowExpr" context: "background: darkslategray;" }
+property: { type_name: "MarginExpr" demo_type: MARGIN context: "background: cornflowerblue; width: 40px; height: 40px; border-radius: 4px;" }
+property: { type_name: "PaddingExpr" context: "background: darkslategray; border: thin dashed cornflowerblue; height: auto; min-height: 64px;" }
+property: { type_name: "FlexDirectionExpr" demo_type: FLEX context: "gap: 4px; align-items: flex-start;" }
+property: { type_name: "JustifyContentExpr" demo_type: FLEX context: "gap: 4px; flex-direction: row; align-items: center;" }
+property: { type_name: "GridTemplateColumnsExpr" demo_type: GRID context: "gap: 4px;" }

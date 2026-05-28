@@ -1,0 +1,7 @@
+# Single-quoted strings with various content
+name: 'hello world'
+path: '/usr/local/bin'
+escaped: 'tab\there'
+with_double: 'say "hi"'
+with_escapes: 'newline\nand\ttab'
+empty_sq: ''

@@ -1,0 +1,259 @@
+# Bar graph — Quarterly Revenue (interactive: hover bars for values)
+# Canvas 700×480, plot area x=[80,620] y=[40,400]
+# Data: Q1=65 Q2=40 Q3=85 Q4=55 Q5=75  (scale: 360/100 = 3.6 px/unit)
+# Bar width=72, gap=24, bar left edges: 80, 176, 272, 368, 464
+# Bar heights: 234, 144, 306, 198, 270
+# Bar top y: 166, 256, 94, 202, 130
+
+root: {
+  attrs: {
+    width:  { base_val: { value_as_string: "700" } }
+    height: { base_val: { value_as_string: "480" } }
+    svg_graphics_element: { svg_element: { style: "font-family:sans-serif;background:#0f172a" } }
+  }
+
+  # ── Style ──────────────────────────────────────────────────────────────────
+  children: {
+    style_elem: {
+      text_content: ".bar-group { cursor:pointer; } .bar-group rect.bar { transition:filter 0.15s; } .bar-group:hover rect.bar { filter:brightness(1.35); } #tooltip { pointer-events:none; transition:opacity 0.15s; }"
+    }
+  }
+
+  # ── Script ─────────────────────────────────────────────────────────────────
+  children: {
+    script: {
+      text_content: "function showBar(evt, label) {\n  var tip = document.getElementById('tooltip');\n  var bar = evt.currentTarget.querySelector('.bar');\n  var bx = parseFloat(bar.getAttribute('x'));\n  var by = parseFloat(bar.getAttribute('y'));\n  var bw = parseFloat(bar.getAttribute('width'));\n  document.getElementById('tiptext').textContent = label;\n  tip.setAttribute('transform','translate('+(bx+bw/2)+','+(by-10)+')');\n  tip.style.opacity='1';\n}\nfunction hideBar() {\n  document.getElementById('tooltip').style.opacity='0';\n}"
+    }
+  }
+
+  # ── Title ──────────────────────────────────────────────────────────────────
+  children: {
+    text_elem: {
+      attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "350" } } }
+        y: { base_val: { items: { value_as_string: "28"  } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:18px;font-weight:bold;text-anchor:middle;fill:#e2e8f0"
+        } } }
+      } }
+      runs: { text: "Quarterly Revenue" }
+    }
+  }
+
+  # ── Plot background ─────────────────────────────────────────────────────────
+  children: { rect: { attrs: {
+    x:      { base_val: { value_as_string: "80"  } }
+    y:      { base_val: { value_as_string: "40"  } }
+    width:  { base_val: { value_as_string: "540" } }
+    height: { base_val: { value_as_string: "360" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "fill:#1e293b" } } }
+  } } }
+
+  # ── Grid lines ─────────────────────────────────────────────────────────────
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "310" } }
+    x2: { base_val: { value_as_string: "620" } } y2: { base_val: { value_as_string: "310" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#334155;stroke-width:1;stroke-dasharray:5,4" } } }
+  } } }
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "220" } }
+    x2: { base_val: { value_as_string: "620" } } y2: { base_val: { value_as_string: "220" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#334155;stroke-width:1;stroke-dasharray:5,4" } } }
+  } } }
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "130" } }
+    x2: { base_val: { value_as_string: "620" } } y2: { base_val: { value_as_string: "130" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#334155;stroke-width:1;stroke-dasharray:5,4" } } }
+  } } }
+
+  # ── Axes ────────────────────────────────────────────────────────────────────
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80" } } y1: { base_val: { value_as_string: "40"  } }
+    x2: { base_val: { value_as_string: "80" } } y2: { base_val: { value_as_string: "400" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#94a3b8;stroke-width:1.5" } } }
+  } } }
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "400" } }
+    x2: { base_val: { value_as_string: "620" } } y2: { base_val: { value_as_string: "400" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#94a3b8;stroke-width:1.5" } } }
+  } } }
+
+  # ── Bars (interactive groups) ────────────────────────────────────────────────
+  # Q1: value=65, height=234, y=166
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "bar-group" }
+        global_event_handlers: { onmouseover: "showBar(evt,'Q1: 65')" onmouseout: "hideBar()" }
+      } } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "80"  } }
+        y:      { base_val: { value_as_string: "166" } }
+        width:  { base_val: { value_as_string: "72"  } }
+        height: { base_val: { value_as_string: "234" } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "bar" }
+          style: "fill:#3b82f6"
+        } } }
+      } } }
+    }
+  }
+  # Q2: value=40, height=144, y=256
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "bar-group" }
+        global_event_handlers: { onmouseover: "showBar(evt,'Q2: 40')" onmouseout: "hideBar()" }
+      } } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "176" } }
+        y:      { base_val: { value_as_string: "256" } }
+        width:  { base_val: { value_as_string: "72"  } }
+        height: { base_val: { value_as_string: "144" } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "bar" }
+          style: "fill:#60a5fa"
+        } } }
+      } } }
+    }
+  }
+  # Q3: value=85, height=306, y=94
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "bar-group" }
+        global_event_handlers: { onmouseover: "showBar(evt,'Q3: 85')" onmouseout: "hideBar()" }
+      } } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "272" } }
+        y:      { base_val: { value_as_string: "94"  } }
+        width:  { base_val: { value_as_string: "72"  } }
+        height: { base_val: { value_as_string: "306" } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "bar" }
+          style: "fill:#2563eb"
+        } } }
+      } } }
+    }
+  }
+  # Q4: value=55, height=198, y=202
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "bar-group" }
+        global_event_handlers: { onmouseover: "showBar(evt,'Q4: 55')" onmouseout: "hideBar()" }
+      } } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "368" } }
+        y:      { base_val: { value_as_string: "202" } }
+        width:  { base_val: { value_as_string: "72"  } }
+        height: { base_val: { value_as_string: "198" } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "bar" }
+          style: "fill:#60a5fa"
+        } } }
+      } } }
+    }
+  }
+  # Q5: value=75, height=270, y=130
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "bar-group" }
+        global_event_handlers: { onmouseover: "showBar(evt,'Q5: 75')" onmouseout: "hideBar()" }
+      } } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "464" } }
+        y:      { base_val: { value_as_string: "130" } }
+        width:  { base_val: { value_as_string: "72"  } }
+        height: { base_val: { value_as_string: "270" } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "bar" }
+          style: "fill:#3b82f6"
+        } } }
+      } } }
+    }
+  }
+
+  # ── Tooltip ─────────────────────────────────────────────────────────────────
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        id: "tooltip"
+        style: "opacity:0"
+      } } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "-40" } }
+        y:      { base_val: { value_as_string: "-22" } }
+        width:  { base_val: { value_as_string: "80"  } }
+        height: { base_val: { value_as_string: "18"  } }
+        rx:     { base_val: { value_as_string: "4"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#1e293b;stroke:#3b82f6;stroke-width:1"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "0"   } } }
+        y: { base_val: { items: { value_as_string: "-9"  } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          id: "tiptext"
+          style: "font-size:11px;text-anchor:middle;fill:#e2e8f0;font-family:sans-serif"
+        } } }
+      } } runs: { text: "" } } }
+    }
+  }
+
+  # ── X-axis labels ───────────────────────────────────────────────────────────
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "116" } } }
+    y: { base_val: { items: { value_as_string: "424" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Q1" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "212" } } }
+    y: { base_val: { items: { value_as_string: "424" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Q2" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "308" } } }
+    y: { base_val: { items: { value_as_string: "424" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Q3" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "404" } } }
+    y: { base_val: { items: { value_as_string: "424" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Q4" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "500" } } }
+    y: { base_val: { items: { value_as_string: "424" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Q5" } } }
+
+  # ── Y-axis labels ───────────────────────────────────────────────────────────
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "404" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "0" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "314" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "25" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "224" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "50" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "134" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "75" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "44"  } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "100" } } }
+}

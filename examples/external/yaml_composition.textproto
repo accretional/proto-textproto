@@ -1,0 +1,39 @@
+version: "1.0"
+step {
+  name: "build-step-name"
+  definition {
+    build {
+      image_name: "codefreshio/yaml-node-33"
+      dockerfile: "Dockerfile"
+    }
+  }
+}
+step {
+  name: "push-to-dockerhub"
+  definition {
+    push {
+      candidate: "${{build-step-name}}"
+      tag: "latest"
+    }
+  }
+}
+step {
+  name: "composition-step"
+  definition {
+    composition {
+      composition_name: "yaml-composition"
+      composition_candidates {
+        composition_candidate {
+          service_name: "test-yaml"
+          service_image: "codefreshio/${{IMAGE_NAME}}:latest"
+          service_ports {
+            port: "3000"
+          }
+        }
+      }
+      composition_variables {
+        comp_var: "IMAGE_NAME=yaml-node-33"
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+# Realistic RPC service configuration in textproto
+# This is the kind of file proto-textproto is designed to parse
+
+service {
+  name: "user-service"
+  version: "2.1.0"
+
+  endpoint {
+    method: "GetUser"
+    path: "/api/v2/users"
+    request_type: "GetUserRequest"
+    response_type: "GetUserResponse"
+    timeout_ms: 5000
+    retry_policy {
+      max_retries: 3
+      backoff_ms: 100
+      backoff_multiplier: 2.0
+    }
+    auth {
+      required: true
+      scopes: ["read:users", "admin"]
+    }
+  }
+
+  endpoint {
+    method: "CreateUser"
+    path: "/api/v2/users"
+    request_type: "CreateUserRequest"
+    response_type: "CreateUserResponse"
+    timeout_ms: 10000
+    retry_policy {
+      max_retries: 1
+      backoff_ms: 500
+    }
+    auth {
+      required: true
+      scopes: ["write:users"]
+    }
+    rate_limit {
+      requests_per_second: 100
+      burst: 150
+    }
+  }
+
+  endpoint {
+    method: "ListUsers"
+    path: "/api/v2/users/list"
+    request_type: "ListUsersRequest"
+    response_type: "ListUsersResponse"
+    timeout_ms: 15000
+    pagination {
+      default_page_size: 50
+      max_page_size: 200
+    }
+  }
+
+  health_check {
+    enabled: true
+    interval_seconds: 30
+    path: "/healthz"
+    expected_status: 200
+  }
+
+  middleware: ["logging", "tracing", "auth", "rate_limit"]
+
+  metadata {
+    owner: "platform-team"
+    tier: "critical"
+    oncall: "platform-oncall@example.com"
+    dashboard: "https://grafana.internal/d/user-service"
+    runbook: "https://wiki.internal/user-service-runbook"
+  }
+}

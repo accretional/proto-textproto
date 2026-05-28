@@ -1,0 +1,22 @@
+# Strings with rich content (escapes, special chars, long values)
+sql_query: "SELECT u.id, u.name, u.email\n"
+           "FROM users u\n"
+           "JOIN roles r ON r.user_id = u.id\n"
+           "WHERE u.active = true\n"
+           "ORDER BY u.name ASC\n"
+           "LIMIT 100;"
+
+json_payload: "{\"name\": \"test\", \"values\": [1, 2, 3], \"nested\": {\"key\": \"val\"}}"
+
+css_rule: ".container > .item:nth-child(2n+1) { background-color: #f0f0f0; margin: 0 auto; }"
+
+html_template: "<div class=\"wrapper\">\n"
+               "  <h1>Title</h1>\n"
+               "  <p>Paragraph with &amp; entities</p>\n"
+               "</div>"
+
+regex_pattern: "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$"
+
+file_path: "C:\\Users\\test\\Documents\\file.txt"
+
+url: "https://api.example.com/v2/resources?filter=active&sort=name&limit=100"

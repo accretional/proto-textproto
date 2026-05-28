@@ -1,0 +1,9 @@
+title: "Pseudo-elements"
+pseudo_element: { type_name: "PeBefore" demo_type: PSEUDO_ELEMENT context: "content: '✦'; color: cornflowerblue; font-size: 24px; display: block; text-align: center;" }
+pseudo_element: { type_name: "PeAfter" demo_type: PSEUDO_ELEMENT context: "content: '↗'; color: hotpink; font-size: 18px; position: absolute; bottom: 4px; right: 8px;" }
+pseudo_element: { type_name: "PeFirstLetter" demo_type: PSEUDO_ELEMENT context: "color: cornflowerblue; font-size: 2.2em; font-weight: bold; float: left; line-height: 1;" }
+pseudo_element: { type_name: "PeFirstLine" demo_type: PSEUDO_ELEMENT context: "color: cornflowerblue; font-weight: bold; letter-spacing: 1px;" }
+pseudo_element: { type_name: "PeSelection" demo_type: PSEUDO_ELEMENT context: "background: cornflowerblue; color: white;" }
+pseudo_element: { type_name: "PeMarker" demo_type: PSEUDO_ELEMENT context: "color: cornflowerblue; font-size: 1.4em;" }
+pseudo_element: { type_name: "PePlaceholder" demo_type: PSEUDO_ELEMENT context: "color: cornflowerblue; font-style: italic;" }
+pseudo_element: { type_name: "PeBackdrop" demo_type: PSEUDO_ELEMENT context: "background: rgba(0, 0, 100, 0.6);" }

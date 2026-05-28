@@ -1,0 +1,39 @@
+# 6-level deep nesting to stress-test recursive message parsing
+root {
+  level1 {
+    level2 {
+      level3 {
+        level4 {
+          level5 {
+            level6 {
+              value: "bottom"
+            }
+          }
+        }
+      }
+    }
+  }
+  # Same depth using angle brackets
+  alt_path <
+    inner <
+      deeper <
+        deepest <
+          name: "angle-nested"
+          count: 42
+        >
+      >
+    >
+  >
+  # Mixed brace and angle at alternating levels
+  mixed {
+    a <
+      b {
+        c <
+          d {
+            leaf: true
+          }
+        >
+      }
+    >
+  }
+}

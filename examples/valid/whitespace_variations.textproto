@@ -1,0 +1,38 @@
+# Various whitespace and formatting styles
+
+# Compact single-line messages
+a { x: 1 }
+b { x: 2; y: 3 }
+c: { name: "inline" }
+
+# Wide spacing
+d   :   "spaced"
+
+# Multiple fields on one line separated by semicolons
+e: 1; f: 2; g: 3
+
+# Dense nested
+outer{inner{deep{value:"compact"}}}
+
+# Message with many blank lines between fields
+sparse {
+
+  first: 1
+
+
+  second: 2
+
+
+
+  third: 3
+
+}
+
+# List formatting variations
+dense_list: [1,2,3]
+spaced_list: [ "a" , "b" , "c" ]
+vertical_list: [
+  "alpha",
+  "beta",
+  "gamma"
+]

@@ -25,6 +25,20 @@ for textproto in examples/valid/*.textproto; do
 done
 
 echo ""
+echo "--- External textproto files from sibling projects (should PASS) ---"
+for textproto in examples/external/*.textproto; do
+  base=$(basename "$textproto" .textproto)
+  if ./bin/parse "$textproto" 2>/dev/null; then
+    echo "PASS: $base"
+    PASS=$((PASS + 1))
+  else
+    echo "FAIL: $base (expected PASS but got rejection)"
+    FAIL=$((FAIL + 1))
+    ERRORS="${ERRORS}\n  ${base}: expected valid external, got rejected"
+  fi
+done
+
+echo ""
 echo "--- Invalid textproto files (should FAIL) ---"
 for textproto in examples/invalid/*.textproto; do
   base=$(basename "$textproto" .textproto)

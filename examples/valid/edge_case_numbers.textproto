@@ -1,0 +1,35 @@
+# Edge cases for numeric parsing
+zero: 0
+neg_zero: -0
+large_dec: 999999999
+neg_large: -999999999
+
+# Octal
+octal_zero: 00
+octal_max: 0777
+octal_single: 01
+
+# Hex
+hex_lower: 0xff
+hex_upper: 0XFF
+hex_mixed: 0xAbCd
+hex_zero: 0x0
+
+# Floats
+just_dot: 0.0
+leading_dot: .5
+trailing_dot: 1.
+exp_lower: 1e10
+exp_upper: 1E10
+exp_pos: 1e+10
+exp_neg: 1e-10
+full_float: 123.456e+78
+neg_float: -3.14
+with_suffix: 1.0f
+with_suffix_upper: 1.0F
+exp_suffix: 1e10f
+
+# Special float identifiers
+pos_inf: inf
+neg_inf: -inf
+not_a_number: nan

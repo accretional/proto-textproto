@@ -1,0 +1,22 @@
+version: "1.0"
+step {
+  name: "build-example"
+  definition {
+    build {
+      image_name: "codefresh-io/image"
+      dockerfile: "Dockerfile"
+      tag: "latest"
+      description: "yaml example"
+    }
+  }
+}
+step {
+  name: "push-image"
+  definition {
+    push {
+      candidate: "${{build-example}}"
+      tag: "${{CF_BRANCH}}"
+      registry: "bintray.io"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+# Empty messages and lists
+empty_brace {}
+empty_angle <>
+empty_list: []
+nested_empty {
+  inner {}
+  another <>
+  values: []
+}
+# Empty message with colon
+with_colon: {}
+with_colon_angle: <>

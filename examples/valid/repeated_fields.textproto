@@ -1,0 +1,28 @@
+# Same field name repeated (valid in textproto — represents repeated proto fields)
+tag: "alpha"
+tag: "beta"
+tag: "gamma"
+
+item {
+  name: "first"
+  value: 1
+}
+item {
+  name: "second"
+  value: 2
+}
+item {
+  name: "third"
+  value: 3
+}
+
+# Repeated scalar and message fields mixed
+priority: 10
+priority: 20
+priority: 30
+metadata {
+  key: "a"
+}
+metadata {
+  key: "b"
+}

@@ -1,0 +1,45 @@
+# Exercise many syntax variations together
+# Semicolons, commas, no terminator, braces, angles, colons before messages
+
+header: "test";
+version: 42,
+debug: true
+
+# Message with colon + braces
+config: {
+  name: "primary"
+  timeout: 30
+}
+
+# Message without colon + angle brackets
+fallback <
+  name: "secondary"
+  timeout: 60
+>
+
+# Scalar list with mixed terminators in surrounding fields
+pre: 1;
+tags: ["a", "b", "c"]
+post: 2,
+
+# Message list
+endpoints: [
+  { host: "localhost"; port: 8080 },
+  { host: "remote"; port: 9090 }
+]
+
+# Extension + any in same message
+[com.example.meta]: "custom"
+[type.googleapis.com/com.example.Config] {
+  enabled: true
+}
+
+# Nested with all terminator styles
+outer {
+  a: 1;
+  b: 2,
+  c: 3
+  inner {
+    x: "nested"
+  }
+}

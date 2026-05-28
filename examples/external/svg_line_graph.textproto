@@ -1,0 +1,293 @@
+# Line graph — Monthly Sales (interactive: hover data points for values)
+# Canvas 900×520, plot area x=[80,840] y=[40,440]
+# Scale: 400px height → 100 units  (4 px/unit)
+# Data: Jan=30, Feb=75, Mar=50, Apr=90, May=60
+# x positions: 80, 290, 500, 710, 840
+# y positions (y=440-val*4): 320, 140, 240, 80, 200
+
+root: {
+  attrs: {
+    width:  { base_val: { value_as_string: "900" } }
+    height: { base_val: { value_as_string: "520" } }
+    svg_graphics_element: { svg_element: { style: "font-family:sans-serif;background:#0f172a" } }
+  }
+
+  # ── Style ──────────────────────────────────────────────────────────────────
+  children: {
+    style_elem: {
+      text_content: ".dot-group { cursor:pointer; } .dot-group:hover .dot-circle { r:8; } #tooltip { pointer-events:none; transition:opacity 0.15s; }"
+    }
+  }
+
+  # ── Script ─────────────────────────────────────────────────────────────────
+  children: {
+    script: {
+      text_content: "function showTip(evt, label) {\n  var tip = document.getElementById('tooltip');\n  var circ = evt.currentTarget.querySelector('.dot-circle');\n  var cx = parseFloat(circ.getAttribute('cx'));\n  var cy = parseFloat(circ.getAttribute('cy'));\n  document.getElementById('tiptext').textContent = label;\n  tip.setAttribute('transform','translate('+cx+','+(cy-28)+')');\n  tip.style.opacity='1';\n}\nfunction hideTip() {\n  document.getElementById('tooltip').style.opacity='0';\n}"
+    }
+  }
+
+  # ── Title ──────────────────────────────────────────────────────────────────
+  children: {
+    text_elem: {
+      attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "490" } } }
+        y: { base_val: { items: { value_as_string: "30" } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          style: "font-size:18px;font-weight:bold;text-anchor:middle;fill:#e2e8f0"
+        } } }
+      } }
+      runs: { text: "Monthly Sales" }
+    }
+  }
+
+  # ── Plot background ─────────────────────────────────────────────────────────
+  children: { rect: { attrs: {
+    x:      { base_val: { value_as_string: "80"  } }
+    y:      { base_val: { value_as_string: "40"  } }
+    width:  { base_val: { value_as_string: "760" } }
+    height: { base_val: { value_as_string: "400" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: {
+      style: "fill:#1e293b"
+    } } }
+  } } }
+
+  # ── Grid lines ─────────────────────────────────────────────────────────────
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "340" } }
+    x2: { base_val: { value_as_string: "840" } } y2: { base_val: { value_as_string: "340" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#334155;stroke-width:1;stroke-dasharray:5,4" } } }
+  } } }
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "240" } }
+    x2: { base_val: { value_as_string: "840" } } y2: { base_val: { value_as_string: "240" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#334155;stroke-width:1;stroke-dasharray:5,4" } } }
+  } } }
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "140" } }
+    x2: { base_val: { value_as_string: "840" } } y2: { base_val: { value_as_string: "140" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#334155;stroke-width:1;stroke-dasharray:5,4" } } }
+  } } }
+
+  # ── Axes ────────────────────────────────────────────────────────────────────
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80" } } y1: { base_val: { value_as_string: "40"  } }
+    x2: { base_val: { value_as_string: "80" } } y2: { base_val: { value_as_string: "440" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#94a3b8;stroke-width:1.5" } } }
+  } } }
+  children: { line: { attrs: {
+    x1: { base_val: { value_as_string: "80"  } } y1: { base_val: { value_as_string: "440" } }
+    x2: { base_val: { value_as_string: "840" } } y2: { base_val: { value_as_string: "440" } }
+    svg_geometry_element: { svg_graphics_element: { svg_element: { style: "stroke:#94a3b8;stroke-width:1.5" } } }
+  } } }
+
+  # ── Area fill ───────────────────────────────────────────────────────────────
+  children: { polygon: { attrs: {
+    svg_geometry_element: { svg_graphics_element: { svg_element: {
+      style: "fill:rgba(99,179,237,0.12);stroke:none"
+    } } }
+    svg_animated_points: {
+      points: {
+        items: { x: 80  y: 320 }
+        items: { x: 290 y: 140 }
+        items: { x: 500 y: 240 }
+        items: { x: 710 y: 80  }
+        items: { x: 840 y: 200 }
+        items: { x: 840 y: 440 }
+        items: { x: 80  y: 440 }
+      }
+    }
+  } } }
+
+  # ── Line ────────────────────────────────────────────────────────────────────
+  children: { polyline: { attrs: {
+    svg_geometry_element: { svg_graphics_element: { svg_element: {
+      style: "fill:none;stroke:#63b3ed;stroke-width:3;stroke-linejoin:round;stroke-linecap:round"
+    } } }
+    svg_animated_points: {
+      points: {
+        items: { x: 80  y: 320 }
+        items: { x: 290 y: 140 }
+        items: { x: 500 y: 240 }
+        items: { x: 710 y: 80  }
+        items: { x: 840 y: 200 }
+      }
+    }
+  } } }
+
+  # ── Data points (interactive groups) ────────────────────────────────────────
+  # Jan: 30 → (80, 320)
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "dot-group" }
+        global_event_handlers: {
+          onmouseover: "showTip(evt,'Jan: 30')"
+          onmouseout: "hideTip()"
+        }
+      } } }
+      children: { circle: { attrs: {
+        cx: { base_val: { value_as_string: "80"  } }
+        cy: { base_val: { value_as_string: "320" } }
+        r:  { base_val: { value_as_string: "6"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "dot-circle" }
+          style: "fill:#63b3ed;stroke:#0f172a;stroke-width:2;transition:r 0.1s"
+        } } }
+      } } }
+    }
+  }
+  # Feb: 75 → (290, 140)
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "dot-group" }
+        global_event_handlers: { onmouseover: "showTip(evt,'Feb: 75')" onmouseout: "hideTip()" }
+      } } }
+      children: { circle: { attrs: {
+        cx: { base_val: { value_as_string: "290" } }
+        cy: { base_val: { value_as_string: "140" } }
+        r:  { base_val: { value_as_string: "6"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "dot-circle" }
+          style: "fill:#63b3ed;stroke:#0f172a;stroke-width:2;transition:r 0.1s"
+        } } }
+      } } }
+    }
+  }
+  # Mar: 50 → (500, 240)
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "dot-group" }
+        global_event_handlers: { onmouseover: "showTip(evt,'Mar: 50')" onmouseout: "hideTip()" }
+      } } }
+      children: { circle: { attrs: {
+        cx: { base_val: { value_as_string: "500" } }
+        cy: { base_val: { value_as_string: "240" } }
+        r:  { base_val: { value_as_string: "6"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "dot-circle" }
+          style: "fill:#63b3ed;stroke:#0f172a;stroke-width:2;transition:r 0.1s"
+        } } }
+      } } }
+    }
+  }
+  # Apr: 90 → (710, 80)
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "dot-group" }
+        global_event_handlers: { onmouseover: "showTip(evt,'Apr: 90')" onmouseout: "hideTip()" }
+      } } }
+      children: { circle: { attrs: {
+        cx: { base_val: { value_as_string: "710" } }
+        cy: { base_val: { value_as_string: "80"  } }
+        r:  { base_val: { value_as_string: "6"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "dot-circle" }
+          style: "fill:#63b3ed;stroke:#0f172a;stroke-width:2;transition:r 0.1s"
+        } } }
+      } } }
+    }
+  }
+  # May: 60 → (840, 200)
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        class_name: { base_val: "dot-group" }
+        global_event_handlers: { onmouseover: "showTip(evt,'May: 60')" onmouseout: "hideTip()" }
+      } } }
+      children: { circle: { attrs: {
+        cx: { base_val: { value_as_string: "840" } }
+        cy: { base_val: { value_as_string: "200" } }
+        r:  { base_val: { value_as_string: "6"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          class_name: { base_val: "dot-circle" }
+          style: "fill:#63b3ed;stroke:#0f172a;stroke-width:2;transition:r 0.1s"
+        } } }
+      } } }
+    }
+  }
+
+  # ── Tooltip (hidden until hover) ────────────────────────────────────────────
+  children: {
+    g: {
+      attrs: { svg_graphics_element: { svg_element: {
+        id: "tooltip"
+        style: "opacity:0"
+      } } }
+      children: { rect: { attrs: {
+        x:      { base_val: { value_as_string: "-48" } }
+        y:      { base_val: { value_as_string: "-20" } }
+        width:  { base_val: { value_as_string: "96"  } }
+        height: { base_val: { value_as_string: "18"  } }
+        rx:     { base_val: { value_as_string: "4"   } }
+        svg_geometry_element: { svg_graphics_element: { svg_element: {
+          style: "fill:#1e293b;stroke:#63b3ed;stroke-width:1"
+        } } }
+      } } }
+      children: { text_elem: { attrs: { svg_text_positioning: {
+        x: { base_val: { items: { value_as_string: "0"   } } }
+        y: { base_val: { items: { value_as_string: "-7"  } } }
+        svg_text_content: { svg_graphics_element: { svg_element: {
+          id: "tiptext"
+          style: "font-size:11px;text-anchor:middle;fill:#e2e8f0;font-family:sans-serif"
+        } } }
+      } } runs: { text: "" } } }
+    }
+  }
+
+  # ── X-axis labels ───────────────────────────────────────────────────────────
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "80"  } } }
+    y: { base_val: { items: { value_as_string: "468" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Jan" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "290" } } }
+    y: { base_val: { items: { value_as_string: "468" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Feb" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "500" } } }
+    y: { base_val: { items: { value_as_string: "468" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Mar" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "710" } } }
+    y: { base_val: { items: { value_as_string: "468" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "Apr" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "840" } } }
+    y: { base_val: { items: { value_as_string: "468" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:13px;text-anchor:middle;fill:#94a3b8" } } }
+  } } runs: { text: "May" } } }
+
+  # ── Y-axis labels ───────────────────────────────────────────────────────────
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "444" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "0" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "344" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "25" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "244" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "50" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "144" } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "75" } } }
+  children: { text_elem: { attrs: { svg_text_positioning: {
+    x: { base_val: { items: { value_as_string: "68" } } }
+    y: { base_val: { items: { value_as_string: "44"  } } }
+    svg_text_content: { svg_graphics_element: { svg_element: { style: "font-size:11px;text-anchor:end;fill:#64748b" } } }
+  } } runs: { text: "100" } } }
+}

@@ -1,0 +1,17 @@
+# Adjacent string literals concatenate (whitespace skipped between them)
+greeting: "hello "
+          "world"
+
+# Multiple fragments
+long_text: "line one\n"
+           "line two\n"
+           "line three"
+
+# Single-quoted concatenation
+sq: 'part a'
+    'part b'
+
+# Mixed quotes do NOT concatenate (each is a separate string_literal)
+# but the grammar allows multiple string_literal in StringVal
+mixed: "double"
+       'single'
