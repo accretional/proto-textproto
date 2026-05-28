@@ -9,13 +9,25 @@ import (
 
 	"github.com/accretional/gluon/v2/compiler"
 	"github.com/accretional/gluon/v2/metaparser"
+	pb "github.com/accretional/gluon/v2/pb"
 	"github.com/accretional/proto-textproto/lang"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 // EBNF returns the embedded textproto EBNF grammar source.
 func EBNF() []byte {
 	return lang.EBNF
+}
+
+// Grammar returns the pre-compiled GrammarDescriptor from the embedded
+// binary proto. This avoids re-parsing the EBNF at runtime.
+func Grammar() (*pb.GrammarDescriptor, error) {
+	gd := &pb.GrammarDescriptor{}
+	if err := proto.Unmarshal(lang.Grammar, gd); err != nil {
+		return nil, fmt.Errorf("unmarshal grammar: %w", err)
+	}
+	return gd, nil
 }
 
 // CompileResult holds the output of compiling the EBNF grammar.

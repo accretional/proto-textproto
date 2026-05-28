@@ -19,6 +19,10 @@ if [ ! -f proto/gen/textproto.pb.go ]; then
   exit 1
 fi
 
+# Regenerate pre-compiled grammar binary from EBNF
+echo "Generating pre-compiled grammar..."
+go run ./lang/cmd/gengrammar
+
 # Build binaries
 mkdir -p bin
 

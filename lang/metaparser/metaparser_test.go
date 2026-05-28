@@ -67,6 +67,26 @@ func TestCompileExpectedMessages(t *testing.T) {
 	}
 }
 
+func TestGrammar(t *testing.T) {
+	gd, err := Grammar()
+	if err != nil {
+		t.Fatalf("Grammar: %v", err)
+	}
+	if got := len(gd.GetRules()); got != 84 {
+		t.Errorf("expected 84 rules, got %d", got)
+	}
+	// Verify key rules exist
+	ruleNames := make(map[string]bool)
+	for _, r := range gd.GetRules() {
+		ruleNames[r.GetName()] = true
+	}
+	for _, name := range []string{"Message", "Field", "ScalarValue", "ident", "string_literal"} {
+		if !ruleNames[name] {
+			t.Errorf("missing expected rule %s", name)
+		}
+	}
+}
+
 func TestSerializeProto(t *testing.T) {
 	result, err := Compile(EBNF())
 	if err != nil {

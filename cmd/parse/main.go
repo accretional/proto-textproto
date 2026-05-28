@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/accretional/proto-textproto/lang"
+	"github.com/accretional/proto-textproto/lang/metaparser"
 	pb "github.com/accretional/gluon/v2/pb"
 
-	"github.com/accretional/gluon/v2/metaparser"
+	gluonparser "github.com/accretional/gluon/v2/metaparser"
 )
 
 func main() {
@@ -18,11 +18,10 @@ func main() {
 	}
 	inputPath := os.Args[1]
 
-	// Use embedded grammar
-	grammarDoc := metaparser.WrapString(string(lang.EBNF))
-	gd, err := metaparser.ParseEBNF(grammarDoc)
+	// Use pre-compiled grammar (no EBNF re-parsing)
+	gd, err := metaparser.Grammar()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "ParseEBNF: %v\n", err)
+		fmt.Fprintf(os.Stderr, "load grammar: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -38,8 +37,8 @@ func main() {
 	cleaned := stripComments(string(inputSrc))
 
 	// Parse input against grammar
-	srcDoc := metaparser.WrapString(cleaned)
-	ast, err := metaparser.ParseCST(&pb.CstRequest{
+	srcDoc := gluonparser.WrapString(cleaned)
+	ast, err := gluonparser.ParseCST(&pb.CstRequest{
 		Grammar:  gd,
 		Document: srcDoc,
 	})
