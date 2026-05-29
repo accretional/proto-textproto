@@ -46,5 +46,4 @@ Comment handling: textproto uses `#` for line comments. Gluon handles `//`, `/* 
 
 ## References
 
-- textproto spec: `temp/textproto_spec.html`
 - gluon: https://github.com/accretional/gluon
